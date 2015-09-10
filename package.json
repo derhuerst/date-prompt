@@ -1,0 +1,30 @@
+{
+	"name": "date-prompt",
+	"description": "A CLI prompt to ask for a date.",
+	"version": "0.1.0",
+	"main": "src/index.js",
+	"keywords": [
+		"date",
+		"day",
+		"month",
+		"year",
+		"prompt",
+		"cli",
+		"command line",
+		"stdin",
+		"interactive",
+		"terminal",
+		"javascript"
+	],
+	"author": {
+		"name": "Jannis R",
+		"email": "mail@jannisr.de",
+		"url": "http://jannisr.de"
+	},
+	"homepage": "https://github.com/derhuerst/date-prompt",
+	"repository": "git://github.com/derhuerst/date-prompt.git",
+	"bugs": "https://github.com/derhuerst/date-prompt/issues",
+	"license": "MIT",
+	"dependencies": {
+	}
+}
