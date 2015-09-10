@@ -1,18 +1,19 @@
 {
 	"name": "date-prompt",
-	"description": "A CLI prompt to ask for a date.",
+	"description": "A CLI date picker prompt.",
 	"version": "0.1.0",
 	"main": "src/index.js",
 	"keywords": [
+		"dow",
 		"date",
 		"day",
 		"month",
 		"year",
 		"prompt",
-		"cli",
 		"command line",
 		"stdin",
 		"interactive",
+		"cli",
 		"terminal",
 		"javascript"
 	],
