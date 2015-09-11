@@ -2,7 +2,7 @@
 
 A CLI date picker prompt.
 
-[![asciicast](https://asciinema.org/a/26225.png)](https://asciinema.org/a/26225)
+[![asciicast](https://asciinema.org/a/26264.png)](https://asciinema.org/a/26264)
 
 [![npm version](https://img.shields.io/npm/v/date-prompt.svg)](https://www.npmjs.com/package/date-prompt)
 [![dependency status](https://img.shields.io/david/derhuerst/date-prompt.svg)](https://david-dm.org/derhuerst/date-prompt)
