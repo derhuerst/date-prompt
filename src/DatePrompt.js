@@ -129,7 +129,7 @@ module.exports = {
 
 	number: function (n) {
 		var now = new Date();
-		if ((now - this._l) > 500)   // a lot of time elapsed
+		if ((now - this._l) > 1000)   // a lot of time elapsed
 			this._p = '' + n;   // reset typed value
 		else {
 			this._p += n;
@@ -206,7 +206,7 @@ module.exports = {
 				this._m.format('dd')
 			].join(' '));
 			var digits = [];
-			digits.push(lPad(this._m.format('D'), 2, ' '));
+			digits.push(lPad(this._m.format('D'), 2, '0'));
 			digits.push(this._m.format('MMM'));
 			digits.push(this._m.format('YYYY'));
 			digits[this._d] = chalk.underline.yellow(digits[this._d]);
