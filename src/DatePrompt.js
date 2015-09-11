@@ -12,16 +12,23 @@ module.exports = {
 
 
 
-	_m:			null,
-	_i:			null,
-	_o:			null,
+	digits: [
+		{ unit: 'day',		method: 'date',		length: 2 },
+		{ unit: 'month',	method: 'month',	length: 2 },
+		{ unit: 'year',		method: 'year',		length: 4 }
+	],
 
-	_c:			null,
 
-	_d:			null,
-	date:		null,
 
-	_k:			null,
+	_m:		null,   // moment.js object
+	_i:		null,   // stdin
+	_o:		null,   // stdout
+
+	_d:		null,   // deferred
+	date:	null,   // promise
+
+	_d:		null,   // current index of `this.digits`
+	_k:		null,   // key handler
 
 
 
@@ -37,11 +44,11 @@ module.exports = {
 		this._i = options.stdin || process.stdin;
 		this._o = options.stdout || process.stdout;
 
-		this._c = 0;
-
-		// let `DatePrompt` directly inherit from bluebird
+		// todo: let `DatePrompt` directly inherit from bluebird
 		this._d = bluebird.defer();
 		this.date = this._d.promise;
+
+		this._d = 0;
 
 		var _k = function (key) {
 			key = key.toString('utf8');
@@ -52,8 +59,8 @@ module.exports = {
 				else if	(key === 'B')	return self.down();
 				else if	(key === 'C')	return self.right();
 				else if	(key === 'D')	return self.left();
-				else if	(key === 'F')	return self._c = 2;
-				else if	(key === 'H')	return self._c = 0;
+				else if	(key === 'F')	return self.first();
+				else if	(key === 'H')	return self.last();
 			}
 
 			else if	(key === '\u0003')	return self.abort();   // ctrl + C
@@ -63,21 +70,17 @@ module.exports = {
 			else if	(key === '\t')		return self.right();   // tab
 
 			else if	(/[0-9]/.test(key))	return self.number(parseInt(key));   // number key
-			else if (key.length > 1) {
+			else if (key.length > 1)
 				for (var i = 0; i < key.length; i++) _k(key[i]);
-				return;
-			}
 		};
 		this._k = _k;
-
 		this._i.on('data', _k);
+
 		this._i.setRawMode(true);
 		this._i.resume();
 		this._o.write(escapes.cursorHide);
 
-		this.clear();
 		this.render();
-
 		return this;
 	},
 
@@ -89,10 +92,8 @@ module.exports = {
 		this._i.removeListener('data', this._k);
 		this._i.setRawMode(false);
 		this._i.pause();
-		this._o.write(escapes.cursorShow);
 
-		this.clear();
-		this._o.write('\n');
+		this._o.write(escapes.eraseLine + '\r\n' + escapes.cursorShow);
 	},
 
 	submit: function () {
@@ -101,11 +102,10 @@ module.exports = {
 		this._i.removeListener('data', this._k);
 		this._i.setRawMode(false);
 		this._i.pause();
-		this._o.write(escapes.cursorShow);
+		this._o.write();
 
-		this.clear();
 		this.render(true);
-		this._o.write('\n');
+		this._o.write('\r\n' + escapes.cursorShow);
 	},
 
 
@@ -121,72 +121,66 @@ module.exports = {
 	// arrow key handling
 
 	first: function () {
-		this._c = 0;
-		this.clear();
+		this._d = 0;
 		this.render();
 	},
 	right: function () {
-		this._c = 2;
-		this.clear();
+		this._d = this.digits.length - 1;
 		this.render();
 	},
 
 	left: function () {
-		if (this._c > 0) this._c--;
+		if (this._d > 0) this._d--;
 		else this._o.write(escapes.beep);
-		this.clear();
 		this.render();
 	},
 	right: function () {
-		if (this._c < 2) this._c++;
+		if (this._d < this.digits.length - 1) this._d++;
 		else this._o.write(escapes.beep);
-		this.clear();
 		this.render();
 	},
 
 	up: function () {
-		if (this._c === 0) this._m.add(1, 'day');
-		else if (this._c === 1) this._m.add(1, 'month');
-		else this._m.add(1, 'year');
-		this.clear();
+		// if (this._d === 0) this._m.add(1, 'day');
+		// else if (this._d === 1) this._m.add(1, 'month');
+		// else this._m.add(1, 'year');
+		this._m.add(1, this.digits[this._d].unit);
 		this.render();
 	},
 	down: function () {
-		if (this._c === 0) this._m.subtract(1, 'day');
-		else if (this._c === 1) this._m.subtract(1, 'month');
-		else this._m.subtract(1, 'year');
-		this.clear();
+		// if (this._d === 0) this._m.subtract(1, 'day');
+		// else if (this._d === 1) this._m.subtract(1, 'month');
+		// else this._m.subtract(1, 'year');
+		this._m.subtract(1, this.digits[this._d].unit);
 		this.render();
 	},
 
 
 
-	// rendering
-
-	clear: function () {
-		this._o.write(escapes.eraseLine + '\r');
-	},
-
 	render: function (formatted) {
 		if (formatted) {
-		this._o.write([
-			chalk.green('✔'),
-			chalk.bold(this._q),
-			chalk.cyan(this._m.format('dd DD MMM YYYY'))
-		].join(' '));
-			return;
+
+			this._o.write([
+				chalk.green('✔'),
+				chalk.bold(this._q),
+				chalk.cyan(this._m.format('dd DD MMM YYYY'))
+			].join(' '));
+
+		} else {
+
+			this._o.write([
+				chalk.green('?'),
+				chalk.bold(this._q),
+				this._m.format('dd')
+			].join(' '));
+			var digits = [];
+			digits.push(lPad(this._m.format('D'), 2, ' '));
+			digits.push(this._m.format('MMM'));
+			digits.push(this._m.format('YYYY'));
+			digits[this._d] = chalk.underline.yellow(digits[this._d]);
+			this._o.write(' ' + digits.join(' '));
+
 		}
-		this._o.write([
-			chalk.green('?'),
-			chalk.bold(this._q),
-			this._m.format('dd')
-		].join(' '));
-		var digits = [];
-		digits.push(lPad(this._m.format('D'), 2, ' '));
-		digits.push(this._m.format('MMM'));
-		digits.push(this._m.format('YYYY'));
-		digits[this._c] = chalk.underline.yellow(digits[this._c]);
-		this._o.write(' ' + digits.join(' '));
 	},
 
 
