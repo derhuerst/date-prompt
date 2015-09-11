@@ -24,7 +24,10 @@ var datePrompt =	require('date-prompt');
 
 datePrompt()
 .date.then(function (value) {
-	// …
+	// user submitted
+})
+.catch(function () {
+	// user aborted
 });
 ```
 
