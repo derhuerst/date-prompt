@@ -25,10 +25,14 @@ module.exports = {
 
 
 
-	init: function (options) {
+	init: function (question, options) {
 		var self = this;
 		options = options || {};
 
+		if (!question || 'string' != typeof question)
+			throw new Error('`question` must be a string.');
+
+		this._q = question;
 		this._m = options.date ? moment(options.date) : moment();
 		this._i = options.stdin || process.stdin;
 		this._o = options.stdout || process.stdout;
@@ -58,7 +62,7 @@ module.exports = {
 			else if	(key === '\n')		return self.submit();   // newline
 			else if	(key === '\t')		return self.right();   // tab
 
-			else if	(/[0-9]/.test(key))	return self._o.write(key);   // number
+			else if	(/[0-9]/.test(key))	return self.number(parseInt(key));   // number key
 			else if (key.length > 1) {
 				for (var i = 0; i < key.length; i++) _k(key[i]);
 				return;
@@ -102,6 +106,14 @@ module.exports = {
 		this.clear();
 		this.render(true);
 		this._o.write('\n');
+	},
+
+
+
+	// number key handling
+
+	number: function (n) {
+		// todo
 	},
 
 
@@ -157,17 +169,24 @@ module.exports = {
 
 	render: function (formatted) {
 		if (formatted) {
-			this._o.write(this._m.format('dd DD MMM YYYY'));
+		this._o.write([
+			chalk.green('✔'),
+			chalk.bold(this._q),
+			chalk.cyan(this._m.format('dd DD MMM YYYY'))
+		].join(' '));
 			return;
 		}
-		var digits = [
+		this._o.write([
+			chalk.green('?'),
+			chalk.bold(this._q),
 			this._m.format('dd')
-		];
+		].join(' '));
+		var digits = [];
 		digits.push(lPad(this._m.format('D'), 2, ' '));
 		digits.push(this._m.format('MMM'));
 		digits.push(this._m.format('YYYY'));
-		digits[this._c + 1] = chalk.black.bgWhite(digits[this._c + 1]);
-		this._o.write(digits.join(' '));
+		digits[this._c] = chalk.underline.yellow(digits[this._c]);
+		this._o.write(' ' + digits.join(' '));
 	},
 
 
