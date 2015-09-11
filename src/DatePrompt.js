@@ -14,20 +14,28 @@ module.exports = {
 
 	digits: [
 		{
-			unit:	'day',
-			method:	'date',
-			length:	2,
-			offset:	0
+			unit:		'day',
+			method:		'day',
+			length:		2,
+			offset:		1,   // because Sunday is 0
+			format:		'ddd'
 		}, {
-			unit:	'month',
-			method:	'month',
-			length:	2,
-			offset:	1   // because January is 0
+			unit:		'day',
+			method:		'date',
+			length:		2,
+			format:		'DD'
 		}, {
-			unit: 'year',
-			method: 'year',
-			length: 4,
-			offset:	0
+			unit:		'month',
+			method:		'month',
+			length:		2,
+			offset:		1,   // because January is 0
+			format:		'MMM'
+		}, {
+			unit:		'year',
+			method:		'year',
+			length:		4,
+			format:		'YYYY'
+			separator:	''
 		}
 	],
 
@@ -130,13 +138,13 @@ module.exports = {
 	number: function (n) {
 		var now = new Date();
 		if ((now - this._l) > 1000)   // a lot of time elapsed
-			this._p = '' + n;   // reset typed value
+			this._p = '' + n;   // reset temporary value
 		else {
 			this._p += n;
-			if (this._p.length >= this.digits[this._d].length) {
+			if (this._p.length >= this.digits[this._d].length) {   // got all digits
 				var v = parseInt(this._p);
 				v -= this.digits[this._d].offset || 0;
-				this._m.set(this.digits[this._d].method, v);
+				this._m[this.digits[this._d].method](v);
 				this._p = '';
 				if (this._d < this.digits.length - 1) this._d++;
 			}
@@ -189,29 +197,18 @@ module.exports = {
 
 
 	render: function (formatted) {
-		this._o.write(escapes.eraseLine + '\r');
-		if (formatted) {
+		this._o.write(escapes.eraseLine + '\r' + chalk.green(formatted ? '✔' : '?') + ' ');
 
-			this._o.write([
-				chalk.green('✔'),
-				chalk.bold(this._q),
-				chalk.cyan(this._m.format('dd DD MMM YYYY'))
-			].join(' '));
+		var i, digit;
+		for (i = 0; i < this.digits.length; i++) {
+			digit = this.digits[i];
 
-		} else {
+			if (!formatted && i === this._d)
+				this._o.write(chalk.cyan.underline(this._m.format(digit.format)));
+			else this._o.write(this._m.format(digit.format));
 
-			this._o.write([
-				chalk.green('?'),
-				chalk.bold(this._q),
-				this._m.format('dd')
-			].join(' '));
-			var digits = [];
-			digits.push(lPad(this._m.format('D'), 2, '0'));
-			digits.push(this._m.format('MMM'));
-			digits.push(this._m.format('YYYY'));
-			digits[this._d] = chalk.underline.yellow(digits[this._d]);
-			this._o.write(' ' + digits.join(' '));
-
+			if ('string' === typeof digit.separator) this._o.write(digit.separator);
+			else this._o.write(' ');
 		}
 	},
 
