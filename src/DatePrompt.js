@@ -24,11 +24,13 @@ module.exports = {
 	_i:		null,   // stdin
 	_o:		null,   // stdout
 
-	_d:		null,   // deferred
+	_df:	null,   // deferred
 	date:	null,   // promise
 
 	_d:		null,   // current index of `this.digits`
+	_p:		null,   // temporary typed value
 	_k:		null,   // key handler
+	_l:		null,   // when a number key was pressed the last time
 
 
 
@@ -45,10 +47,11 @@ module.exports = {
 		this._o = options.stdout || process.stdout;
 
 		// todo: let `DatePrompt` directly inherit from bluebird
-		this._d = bluebird.defer();
-		this.date = this._d.promise;
+		this._df = bluebird.defer();
+		this.date = this._df.promise;
 
 		this._d = 0;
+		this._p = '';
 
 		var _k = function (key) {
 			key = key.toString('utf8');
@@ -87,22 +90,21 @@ module.exports = {
 
 
 	abort: function () {
-		this._d.reject();
+		this._df.reject();
 
 		this._i.removeListener('data', this._k);
 		this._i.setRawMode(false);
 		this._i.pause();
 
-		this._o.write(escapes.eraseLine + '\r\n' + escapes.cursorShow);
+		this._o.write(escapes.eraseLine + '\r' + escapes.cursorShow);
 	},
 
 	submit: function () {
-		this._d.resolve(this._m);
+		this._df.resolve(this._m);
 
 		this._i.removeListener('data', this._k);
 		this._i.setRawMode(false);
 		this._i.pause();
-		this._o.write();
 
 		this.render(true);
 		this._o.write('\r\n' + escapes.cursorShow);
@@ -113,7 +115,19 @@ module.exports = {
 	// number key handling
 
 	number: function (n) {
-		// todo
+		var now = new Date();
+		if ((now - this._l) > 500)   // a lot of time elapsed
+			this._p = '' + n;   // reset typed value
+		else {
+			this._p += n;
+			if (this._p.length >= this.digits[this._d].length) {
+				this._m.set(this.digits[this._d].method, parseInt(this._p));
+				this._p = '';
+				if (this._d < this.digits.length - 1) this._d++;
+			}
+		}
+		this._l = now;
+		this.render();
 	},
 
 
@@ -121,43 +135,46 @@ module.exports = {
 	// arrow key handling
 
 	first: function () {
+		if (this._d != 0) this._p = '';
 		this._d = 0;
 		this.render();
 	},
 	right: function () {
+		if (this._d != this.digits.length - 1) this._p = '';
 		this._d = this.digits.length - 1;
 		this.render();
 	},
 
 	left: function () {
-		if (this._d > 0) this._d--;
-		else this._o.write(escapes.beep);
+		if (this._d > 0) {
+			this._d--;
+			this._p = '';
+		} else this._o.write(escapes.beep);
 		this.render();
 	},
 	right: function () {
-		if (this._d < this.digits.length - 1) this._d++;
-		else this._o.write(escapes.beep);
+		if (this._d < this.digits.length - 1) {
+			this._d++;
+			this._p = '';
+		} else this._o.write(escapes.beep);
 		this.render();
 	},
 
 	up: function () {
-		// if (this._d === 0) this._m.add(1, 'day');
-		// else if (this._d === 1) this._m.add(1, 'month');
-		// else this._m.add(1, 'year');
 		this._m.add(1, this.digits[this._d].unit);
+		this._p = '';
 		this.render();
 	},
 	down: function () {
-		// if (this._d === 0) this._m.subtract(1, 'day');
-		// else if (this._d === 1) this._m.subtract(1, 'month');
-		// else this._m.subtract(1, 'year');
 		this._m.subtract(1, this.digits[this._d].unit);
+		this._p = '';
 		this.render();
 	},
 
 
 
 	render: function (formatted) {
+		this._o.write(escapes.eraseLine + '\r');
 		if (formatted) {
 
 			this._o.write([
