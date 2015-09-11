@@ -13,9 +13,22 @@ module.exports = {
 
 
 	digits: [
-		{ unit: 'day',		method: 'date',		length: 2 },
-		{ unit: 'month',	method: 'month',	length: 2 },
-		{ unit: 'year',		method: 'year',		length: 4 }
+		{
+			unit:	'day',
+			method:	'date',
+			length:	2,
+			offset:	0
+		}, {
+			unit:	'month',
+			method:	'month',
+			length:	2,
+			offset:	1   // because January is 0
+		}, {
+			unit: 'year',
+			method: 'year',
+			length: 4,
+			offset:	0
+		}
 	],
 
 
@@ -121,7 +134,9 @@ module.exports = {
 		else {
 			this._p += n;
 			if (this._p.length >= this.digits[this._d].length) {
-				this._m.set(this.digits[this._d].method, parseInt(this._p));
+				var v = parseInt(this._p);
+				v -= this.digits[this._d].offset || 0;
+				this._m.set(this.digits[this._d].method, v);
 				this._p = '';
 				if (this._d < this.digits.length - 1) this._d++;
 			}
