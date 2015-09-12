@@ -209,6 +209,7 @@ module.exports = {
 
 	render: function (formatted) {
 		this._o.write(escapes.eraseLine + '\r' + chalk.green(formatted ? '✔' : '?') + ' ');
+		this._o.write(chalk.bold(this._q) + ' ');
 
 		var i, digit;
 		for (i = 0; i < this.digits.length; i++) {
