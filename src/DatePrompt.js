@@ -35,6 +35,17 @@ module.exports = {
 			method:		'year',
 			length:		4,
 			format:		'YYYY'
+		}, {
+			unit:		'hour',
+			method:		'hour',
+			length:		2,
+			format:		'HH',
+			separator:	':'
+		}, {
+			unit:		'minute',
+			method:		'minute',
+			length:		2,
+			format:		'mm',
 			separator:	''
 		}
 	],

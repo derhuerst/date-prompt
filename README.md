@@ -1,8 +1,8 @@
 # date-prompt
 
-A CLI date picker prompt.
+A CLI prompt to ask for date & time.
 
-[![asciicast](https://asciinema.org/a/26264.png)](https://asciinema.org/a/26264)
+[![asciicast](https://asciinema.org/a/26269.png)](https://asciinema.org/a/26269)
 
 [![npm version](https://img.shields.io/npm/v/date-prompt.svg)](https://www.npmjs.com/package/date-prompt)
 [![dependency status](https://img.shields.io/david/derhuerst/date-prompt.svg)](https://david-dm.org/derhuerst/date-prompt)
