@@ -27,9 +27,9 @@
 	"bugs": "https://github.com/derhuerst/date-prompt/issues",
 	"license": "ISC",
 	"dependencies": {
-		"moment":				"^2.10.6",
-		"bluebird":				"^2.10.0",
-		"ansi-escapes":			"^1.1.0",
+		"moment":				"^2.11.1",
+		"bluebird":				"^2.10.2",
+		"ansi-escapes":			"^1.1.1",
 		"left-pad":				"^0.0.4",
 		"chalk":				"^1.1.1"
 	}
