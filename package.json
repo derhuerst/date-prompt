@@ -17,5 +17,8 @@
 		"ansi-escapes": "^1.1.1",
 		"left-pad":     "^0.0.4",
 		"chalk":        "^1.1.1"
+	},
+	"scripts": {
+		"test":         "node test.js"
 	}
 }
