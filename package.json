@@ -1,36 +1,21 @@
 {
-	"name": "date-prompt",
-	"description": "A CLI date picker prompt.",
-	"version": "0.4.0",
-	"main": "src/index.js",
-	"keywords": [
-		"dow",
-		"date",
-		"day",
-		"month",
-		"year",
-		"prompt",
-		"command line",
-		"stdin",
-		"interactive",
-		"cli",
-		"terminal",
-		"javascript"
-	],
-	"author": {
-		"name": "Jannis R",
-		"email": "mail@jannisr.de",
-		"url": "http://jannisr.de"
-	},
-	"homepage": "https://github.com/derhuerst/date-prompt",
-	"repository": "git://github.com/derhuerst/date-prompt.git",
-	"bugs": "https://github.com/derhuerst/date-prompt/issues",
-	"license": "ISC",
+	"name":             "date-prompt",
+	"description":      "A CLI date picker prompt.",
+	"version":          "0.4.0",
+	"main":             "index.js",
+	"main":             ["index.js", "readme.md"],
+	"keywords":         ["date", "day", "month", "year",
+	                    "interactive", "prompt", "command line", "cli", "terminal"],
+	"author":           "Jannis R <mail@jannisr.de>",
+	"homepage":         "https://github.com/derhuerst/date-prompt",
+	"repository":       "git://github.com/derhuerst/date-prompt.git",
+	"bugs":             "https://github.com/derhuerst/date-prompt/issues",
+	"license":          "ISC",
 	"dependencies": {
-		"moment":				"^2.11.1",
-		"bluebird":				"^2.10.2",
-		"ansi-escapes":			"^1.1.1",
-		"left-pad":				"^0.0.4",
-		"chalk":				"^1.1.1"
+		"moment":       "^2.11.1",
+		"bluebird":     "^2.10.2",
+		"ansi-escapes": "^1.1.1",
+		"left-pad":     "^0.0.4",
+		"chalk":        "^1.1.1"
 	}
 }
