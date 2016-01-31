@@ -103,21 +103,20 @@ var DatePrompt = {
 
 		if(/\x1b\[+[A-Z]/.test(key)) {
 			key = key.charAt(key.length - 1);
-			if		(key === 'A')	return this.up();
-			else if	(key === 'B')	return this.down();
-			else if	(key === 'C')	return this.right();
-			else if	(key === 'D')	return this.left();
-			else if	(key === 'F')	return this.first();
-			else if	(key === 'H')	return this.pressed();
+			if (key === 'A')	return this.up();
+			if (key === 'B')	return this.down();
+			if (key === 'C')	return this.right();
+			if (key === 'D')	return this.left();
+			if (key === 'F')	return this.first();
+			if (key === 'H')	return this.pressed();
 		}
 
-		else if	(key === '\u0003')	return this.abort(); // ctrl + C
-		else if	(key === '\x1b')	return this.abort(); // escape
-		else if	(key === '\r')		return this.submit(); // carriage return
-		else if	(key === '\n')		return this.submit(); // newline
-		else if	(key === '\t')		return this.right(); // tab
+		if (code === 3)			return this.abort(); // ctrl + C
+		if (code === 9)			return this.right(); // ctrl + I / tab
+		if (code === 13)		return this.submit(); // enter
+		if (code === 27)		return this.abort(); // escape
 
-		else if	(/[0-9]/.test(key))	return this.onNumber(parseInt(key)); // number key
+		if (/[0-9]/.test(key))	return this.onNumber(parseInt(key)); // number key
 	},
 
 
