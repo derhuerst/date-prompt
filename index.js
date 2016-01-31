@@ -77,6 +77,11 @@ var DatePrompt = {
 
 
 
+	reset: function () {
+		this.moment = moment();
+		this.render();
+	},
+
 	abort: function () {
 		this.reject();
 		this.stdin.removeListener('data', this.onKey);
@@ -111,10 +116,19 @@ var DatePrompt = {
 			if (key === 'H')	return this.pressed();
 		}
 
+		var code = key.charCodeAt(0);
+		// see https://en.wikipedia.org/wiki/GNU_Readline#Keyboard_shortcuts
+		if (code === 1)			return this.first(); // ctrl + A
 		if (code === 3)			return this.abort(); // ctrl + C
+		if (code === 4)			return process.exit(); // ctrl + D
+		if (code === 5)			return this.last(); // ctrl + E
+		if (code === 7)			return this.reset(); // ctrl + G
 		if (code === 9)			return this.right(); // ctrl + I / tab
-		if (code === 13)		return this.submit(); // enter
+		if (code === 10)		return this.submit(); // ctrl + J
+		if (code === 13)		return this.submit(); // return
 		if (code === 27)		return this.abort(); // escape
+		if (code === 8747)		return this.left(); // alt + B
+		if (code === 402)		return this.right(); // alt + F
 
 		if (/[0-9]/.test(key))	return this.onNumber(parseInt(key)); // number key
 	},
