@@ -4,6 +4,8 @@ const moment =   require('moment')
 const esc =      require('ansi-escapes')
 const chalk =    require('chalk')
 
+const ui =       require('./ui')
+
 
 
 
@@ -36,6 +38,8 @@ const DatePrompt = {
 
 	, cache:    null   // typed be used
 	, pressed:  null   // when a number key was pressed the last time
+	, done:     false
+	, aborted:  false
 
 
 
@@ -69,6 +73,7 @@ const DatePrompt = {
 		this.cache = ''
 		this.pressed = Date.now()
 
+		this.stdout.write('\n')
 		this.render()
 		return this
 	}
@@ -77,6 +82,7 @@ const DatePrompt = {
 
 	, reset: function () {
 		this.moment = moment()
+		this.aborted = this.done = false
 		this.render()
 	}
 
@@ -85,7 +91,8 @@ const DatePrompt = {
 		this.stdin.removeListener('data', this.onKey)
 		this.stdin.setRawMode(false)
 		this.stdin.pause()
-		this.stdout.write(esc.eraseLine + '\r' + esc.cursorShow)
+		this.aborted = this.done = true
+		this.render()
 	}
 
 	, submit: function () {
@@ -95,8 +102,8 @@ const DatePrompt = {
 		this.stdin.setRawMode(false)
 		this.stdin.pause()
 
-		this.render(true)
-		this.stdout.write('\r\n' + esc.cursorShow)
+		this.done = true
+		this.render()
 	}
 
 
@@ -192,21 +199,28 @@ const DatePrompt = {
 
 
 
-	, render: function (formatted) {
-		const o = this.stdout
-
-		o.write(esc.eraseLine + '\r' + chalk.green(formatted ? '✔' : '?') + ' ')
-		o.write(chalk.bold(this.question) + ' ')
-
+	, renderDigits: function (moment, cursor, done) {
+		let str = ''
 		for (let i = 0; i < digits.length; i++) {
 			let digit = digits[i]
-
-			if (!formatted && i === this.cursor)
-				o.write(chalk.cyan.underline(this.moment.format(digit.format)))
-			else o.write(this.moment.format(digit.format))
-
-			o.write(('string' === typeof digit.separator) ? digit.separator : ' ')
+			if (!done && i === cursor)
+				str += chalk.cyan.underline(moment.format(digit.format))
+			else str += moment.format(digit.format)
+			str += digit.separator || ' '
 		}
+		return str
+	}
+
+	, render: function () {
+		this.stdout.write(
+		  esc.cursorDown(1)
+		+ esc.eraseLines(2)
+		+ [
+			ui.symbol(this.done, this.aborted),
+			chalk.bold(this.question),
+			ui.delimiter,
+			this.renderDigits(this.moment, this.cursor, this.done)
+		].join(' ') + '\n')
 	}
 
 }
