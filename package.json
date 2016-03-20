@@ -11,6 +11,7 @@
 	"repository":       "git://github.com/derhuerst/date-prompt.git",
 	"bugs":             "https://github.com/derhuerst/date-prompt/issues",
 	"license":          "ISC",
+	"engines":           {"node": ">=5"},
 	"dependencies": {
 		"moment":       "^2.11.1",
 		"bluebird":     "^3.1.2",
