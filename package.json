@@ -17,7 +17,8 @@
 		"bluebird":     "^3.1.2",
 		"ansi-escapes": "^1.1.1",
 		"left-pad":     "^0.0.4",
-		"chalk":        "^1.1.1"
+		"chalk":        "^1.1.1",
+		"cli-styles":   "^0.1"
 	},
 	"scripts": {
 		"test":         "node test.js"

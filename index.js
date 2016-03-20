@@ -3,8 +3,7 @@
 const moment =   require('moment')
 const esc =      require('ansi-escapes')
 const chalk =    require('chalk')
-
-const ui =       require('./ui')
+const ui =       require('cli-styles')
 
 
 
