@@ -59,20 +59,18 @@ const DatePrompt = {
 			this.cursor = parseInt(options.cursor)
 		else this.cursor = 0
 
-		this.stdin = options.stdin || process.stdin
-		this.stdin.setRawMode(true)
-		this.stdin.resume()
+		process.stdin.setRawMode(true)
+		process.stdin.resume()
 
 		this.onKey = DatePrompt.onKey.bind(this)
-		this.stdin.on('data', this.onKey)
+		process.stdin.on('data', this.onKey)
 
-		this.stdout = options.stdout || process.stdout
-		this.stdout.write(esc.cursorHide)
+		process.stdout.write(esc.cursorHide)
 
 		this.cache = ''
 		this.pressed = Date.now()
 
-		this.stdout.write('\n')
+		process.stdout.write('\n')
 		this.render()
 		return this
 	}
@@ -87,9 +85,9 @@ const DatePrompt = {
 
 	, abort: function () {
 		this.reject()
-		this.stdin.removeListener('data', this.onKey)
-		this.stdin.setRawMode(false)
-		this.stdin.pause()
+		process.stdin.removeListener('data', this.onKey)
+		process.stdin.setRawMode(false)
+		process.stdin.pause()
 		this.aborted = this.done = true
 		this.render()
 	}
@@ -97,9 +95,9 @@ const DatePrompt = {
 	, submit: function () {
 		this.resolve(this.moment)
 
-		this.stdin.removeListener('data', this.onKey)
-		this.stdin.setRawMode(false)
-		this.stdin.pause()
+		process.stdin.removeListener('data', this.onKey)
+		process.stdin.setRawMode(false)
+		process.stdin.pause()
 
 		this.done = true
 		this.render()
@@ -174,14 +172,14 @@ const DatePrompt = {
 		if (this.cursor > 0) {
 			this.cursor--
 			this.cache = ''
-		} else this.stdout.write(esc.beep)
+		} else process.stdout.write(esc.beep)
 		this.render()
 	}
 	, right: function () {
 		if (this.cursor < digits.length - 1) {
 			this.cursor++
 			this.cache = ''
-		} else this.stdout.write(esc.beep)
+		} else process.stdout.write(esc.beep)
 		this.render()
 	}
 
@@ -211,7 +209,7 @@ const DatePrompt = {
 	}
 
 	, render: function () {
-		this.stdout.write(
+		process.stdout.write(
 		  esc.cursorDown(1)
 		+ esc.eraseLines(2)
 		+ [
