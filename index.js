@@ -1,5 +1,6 @@
 'use strict'
 
+const keypress = require('keypress')
 const moment =   require('moment')
 const esc =      require('ansi-escapes')
 const chalk =    require('chalk')
@@ -59,11 +60,11 @@ const DatePrompt = {
 			this.cursor = parseInt(options.cursor)
 		else this.cursor = 0
 
+		keypress(process.stdin)
 		process.stdin.setRawMode(true)
 		process.stdin.resume()
-
 		this.onKey = DatePrompt.onKey.bind(this)
-		process.stdin.on('data', this.onKey)
+		process.stdin.on('keypress', this.onKey)
 
 		process.stdout.write(esc.cursorHide)
 
@@ -105,34 +106,38 @@ const DatePrompt = {
 
 
 
-	, onKey: function (key) {
-		key = key.toString('utf8')
-		const code = key.charCodeAt(0)
+	, onKey: function (raw, key) {
+		if (!key) key = {
+			name:     raw.toLowerCase(),
+			sequence: raw,
+			ctrl: false, meta: false, shift: false
+		}
+		let code
+		if (raw) code = raw.charCodeAt(0)
 
-		if(/\x1b\[+[A-Z]/.test(key)) {
-			key = key.charAt(key.length - 1)
-			if (key === 'A')	return this.up()
-			if (key === 'B')	return this.down()
-			if (key === 'C')	return this.right()
-			if (key === 'D')	return this.left()
-			if (key === 'F')	return this.first()
-			if (key === 'H')	return this.pressed()
+		if (key.ctrl) {
+			if (key.name === 'a')     return this.first()
+			if (key.name === 'c')     return this.abort()
+			if (key.name === 'd')     return process.exit(0)
+			if (key.name === 'e')     return this.last()
+			if (key.name === 'g')     return this.reset()
+			if (key.name === 'i')     return this.right()
 		}
 
-		// see https://en.wikipedia.org/wiki/GNU_Readline#Keyboard_shortcuts
-		if (code === 1)			return this.first(); // ctrl + A
-		if (code === 3)			return this.abort(); // ctrl + C
-		if (code === 4)			return process.exit(); // ctrl + D
-		if (code === 5)			return this.last(); // ctrl + E
-		if (code === 7)			return this.reset(); // ctrl + G
-		if (code === 9)			return this.right(); // ctrl + I / tab
-		if (code === 10)		return this.submit(); // ctrl + J
-		if (code === 13)		return this.submit(); // return
-		if (code === 27)		return this.abort(); // escape
-		if (code === 8747)		return this.left(); // alt + B
-		if (code === 402)		return this.right(); // alt + F
+		if (key.name === 'enter')     return this.submit()
+		if (key.name === 'return')    return this.submit()
+		if (key.name === 'tab')       return this.right()
+		if (key.name === 'escape')    return this.abort()
 
-		if (/[0-9]/.test(key))	return this.onNumber(parseInt(key)); // number key
+		if (key.name === 'up')        return this.up()
+		if (key.name === 'down')      return this.down()
+		if (key.name === 'right')     return this.right()
+		if (key.name === 'left')      return this.left()
+		if (code === 8747)            return this.left(); // alt + B
+		if (code === 402)             return this.right(); // alt + F
+
+		if (/[0-9]/.test(key.name))
+			return this.onNumber(parseInt(key.name))
 	}
 
 
