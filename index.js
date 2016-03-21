@@ -90,6 +90,7 @@ const DatePrompt = {
 		process.stdin.setRawMode(false)
 		process.stdin.pause()
 		this.aborted = this.done = true
+		process.stdout.write(esc.cursorShow)
 		this.render()
 	}
 
@@ -99,8 +100,8 @@ const DatePrompt = {
 		process.stdin.removeListener('data', this.onKey)
 		process.stdin.setRawMode(false)
 		process.stdin.pause()
-
 		this.done = true
+		process.stdout.write(esc.cursorShow)
 		this.render()
 	}
 
@@ -177,15 +178,15 @@ const DatePrompt = {
 		if (this.cursor > 0) {
 			this.cursor--
 			this.cache = ''
+			this.render()
 		} else process.stdout.write(esc.beep)
-		this.render()
 	}
 	, right: function () {
 		if (this.cursor < digits.length - 1) {
 			this.cursor++
 			this.cache = ''
+			this.render()
 		} else process.stdout.write(esc.beep)
-		this.render()
 	}
 
 	, up: function () {
@@ -215,8 +216,7 @@ const DatePrompt = {
 
 	, render: function () {
 		process.stdout.write(
-		  esc.cursorDown(1)
-		+ esc.eraseLines(2)
+		  esc.eraseLines(2)
 		+ [
 			ui.symbol(this.done, this.aborted),
 			chalk.bold(this.question),

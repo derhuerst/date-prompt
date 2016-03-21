@@ -1,4 +1,4 @@
-# date-prompt
+# date-prompt 📅
 
 A CLI prompt to ask for date & time.
 
@@ -6,6 +6,8 @@ A CLI prompt to ask for date & time.
 
 [![npm version](https://img.shields.io/npm/v/date-prompt.svg)](https://www.npmjs.com/package/date-prompt)
 [![dependency status](https://img.shields.io/david/derhuerst/date-prompt.svg)](https://david-dm.org/derhuerst/date-prompt)
+
+*date-prompt* uses [*cli-styles*](https://github.com/derhuerst/cli-styles) to have a look & feel consistent with other prompts.
 
 
 

@@ -1,4 +1,6 @@
-var datePrompt = require('./index.js');
+'use strict'
+
+const datePrompt = require('./index.js')
 
 
 
@@ -12,9 +14,9 @@ console.log([
 	' - the cursor can be moved to the beginning by hitting Ctrl + A',
 	' - the cursor can be moved to the end by hitting Ctrl + E',
 	' - the current digit can be changed by hitting up/down arrow keys',
-	'    - when incrementing minutes on "6:59", the hour increments instead',
-	'    - when incrementing hours on "23:00", the day & date increment instead',
-	'    - when incrementing days on "31 Jan", the month increments instead',
+	'    - when incrementing minutes on "6:59", the hour increments',
+	'    - when incrementing hours on "23:00", the day & date increment',
+	'    - when incrementing days on "31 Jan", the month increments',
 	'    - when incrementing months on "Dec", the year increments instead',
 	' - the prompt can be aborted by hitting Ctrl + C / Escape',
 	' - the REPL can be stopped by hitting Ctrl + D',
@@ -26,12 +28,13 @@ console.log([
 	'    - after the input has been applied, the cursor is moved to the right',
 	' - the prompt shows a question mark before submit',
 	' - the prompt shows a check mark after submit',
+	' - the prompt shows a cross after abort',
 	''
-].join('\n'));
+].join('\n'))
 
 
 
 datePrompt('When is your birthday?', {cursor: 3})
-	.then(function (value) {
-		console.log(new Date(value), '\n');
-	});
+.then(function (value) {
+	process.stdout.write(new Date(value) + '\n')
+})
