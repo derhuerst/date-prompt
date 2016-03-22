@@ -1,10 +1,10 @@
 'use strict'
 
-const keypress = require('keypress')
 const moment =   require('moment')
+const keypress = require('keypress')
+const ui =       require('cli-styles')
 const esc =      require('ansi-escapes')
 const chalk =    require('chalk')
-const ui =       require('cli-styles')
 
 
 
@@ -47,10 +47,10 @@ const DatePrompt = {
 		options = options || {}
 		if ('string' !== typeof question)
 			throw new Error('`question` must be a string.')
+		const self = this
 
 		this.question = question
 		this.moment = options.value ? moment(options.value) : moment()
-		const self = this
 		this.value = new Promise(function (resolve, reject) {
 			self.resolve = resolve
 			self.reject =  reject
@@ -63,8 +63,11 @@ const DatePrompt = {
 		keypress(process.stdin)
 		process.stdin.setRawMode(true)
 		process.stdin.resume()
-		this.onKey = DatePrompt.onKey.bind(this)
-		process.stdin.on('keypress', this.onKey)
+		process.stdin.on('keypress', function (raw, key) {
+			let type = ui.keypress(raw, key)
+			if (self[type]) self[type]()
+			else self.onKey(type)
+		})
 
 		process.stdout.write(esc.cursorHide)
 
@@ -107,43 +110,10 @@ const DatePrompt = {
 
 
 
-	, onKey: function (raw, key) {
-		if (!key) key = {
-			name:     raw.toLowerCase(),
-			sequence: raw,
-			ctrl: false, meta: false, shift: false
-		}
-		let code
-		if (raw) code = raw.charCodeAt(0)
+	, onKey: function (n) {
+		if (!/[0-9]/.test(n)) return
+		n = parseInt(n)
 
-		if (key.ctrl) {
-			if (key.name === 'a')     return this.first()
-			if (key.name === 'c')     return this.abort()
-			if (key.name === 'd')     return process.exit(0)
-			if (key.name === 'e')     return this.last()
-			if (key.name === 'g')     return this.reset()
-			if (key.name === 'i')     return this.right()
-		}
-
-		if (key.name === 'enter')     return this.submit()
-		if (key.name === 'return')    return this.submit()
-		if (key.name === 'tab')       return this.right()
-		if (key.name === 'escape')    return this.abort()
-
-		if (key.name === 'up')        return this.up()
-		if (key.name === 'down')      return this.down()
-		if (key.name === 'right')     return this.right()
-		if (key.name === 'left')      return this.left()
-		if (code === 8747)            return this.left(); // alt + B
-		if (code === 402)             return this.right(); // alt + F
-
-		if (/[0-9]/.test(key.name))
-			return this.onNumber(parseInt(key.name))
-	}
-
-
-
-	, onNumber: function (n) {
 		let now = Date.now()
 		if ((now - this.pressed) > 1000) this.cache = '' + n; // 1s elapsed
 		else {
