@@ -56,7 +56,8 @@ const DatePrompt = {
 			self.reject =  reject
 		})
 
-		if (0 < options.cursor <= (digits.length - 1))
+		if ('number' === typeof options.cursor
+			&& 0 < options.cursor <= (digits.length - 1))
 			this.cursor = parseInt(options.cursor)
 		else this.cursor = 0
 
