@@ -8,8 +8,7 @@
 [![dependency status](https://img.shields.io/david/derhuerst/date-prompt.svg)](https://david-dm.org/derhuerst/date-prompt)
 ![ISC-licensed](https://img.shields.io/github/license/derhuerst/date-prompt.svg)
 
-*number-prompt* uses [*cli-styles*](https://github.com/derhuerst/cli-styles) and [*prompt-skeleton*](https://github.com/derhuerst/prompt-skeleton) to have a look & feel consistent with [other prompts](https://github.com/derhuerst/prompt-skeleton#prompts-using-prompt-skeleton).
-
+*date-prompt* uses [*cli-styles*](https://github.com/derhuerst/cli-styles) and [*prompt-skeleton*](https://github.com/derhuerst/prompt-skeleton) to have a look & feel consistent with [other prompts](https://github.com/derhuerst/prompt-skeleton#prompts-using-prompt-skeleton).
 
 
 ## Installing
@@ -19,21 +18,15 @@ npm install date-prompt
 ```
 
 
-
 ## Usage
 
-```javascript
-var datePrompt =	require('date-prompt');
-
+```js
+const numberPrompt = require('date-prompt')
 datePrompt()
-.date.then(function (value) {
-	// user submitted
-})
-.catch(function () {
-	// user aborted
-});
+.on('data', (v) => console.log('Interim value', v))
+.on('submit', (v) => console.log('Submitted with', v))
+.on('abort', (v) => console.log('Aborted with', v))
 ```
-
 
 
 ## Contributing
