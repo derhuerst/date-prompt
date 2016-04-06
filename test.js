@@ -35,6 +35,6 @@ console.log([
 
 
 datePrompt('When is your birthday?', {cursor: 3})
-.then(function (value) {
-	process.stdout.write(new Date(value) + '\n')
-})
+// .on('data', (e) => console.log('Interim value', new Date(e.value)))
+.on('submit', (v) => console.log('submitted with', new Date(v)))
+.on('abort', (v) => console.log('aborted with', new Date(v)))
