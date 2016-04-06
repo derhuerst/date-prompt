@@ -74,6 +74,11 @@ const DatePrompt = {
 		this.cursor++
 		this.render()
 	}
+	, next: function () {
+		this.typed = ''; this.lastHit = 0
+		this.cursor = (this.cursor + 1) % digits.length
+		this.render()
+	}
 
 	, up: function () {
 		this.typed = ''; this.lastHit = 0
