@@ -1,7 +1,7 @@
 {
 	"name":             "date-prompt",
 	"description":      "A CLI date picker prompt.",
-	"version":          "0.6.0",
+	"version":          "0.7.0",
 	"main":             "index.js",
 	"files":            ["index.js"],
 	"keywords":         ["date", "day", "month", "year",
