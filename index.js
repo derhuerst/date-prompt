@@ -136,7 +136,7 @@ const DatePrompt = {
 		process.stdout.write(esc.eraseLine + esc.cursorTo(0)
 		+ esc.cursorHide + [
 			  ui.symbol(this.done, this.aborted)
-			, chalk.bold(this.msg), ui.delimiter
+			, chalk.bold(this.msg), ui.delimiter(false)
 			, this.renderDigits(this.value, this.cursor, this.done)
 		].join(' '))
 	}
