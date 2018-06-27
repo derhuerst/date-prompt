@@ -21,7 +21,7 @@ npm install date-prompt
 ## Usage
 
 ```js
-const numberPrompt = require('date-prompt')
+const datePrompt = require('date-prompt')
 datePrompt()
 .on('data', (v) => console.log('Interim value', v))
 .on('submit', (v) => console.log('Submitted with', v))
