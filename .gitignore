@@ -5,4 +5,4 @@ Thumbs.db
 node_modules
 npm-debug.log
 
-date-prompt.sublime-workspace
+/package-lock.json
