@@ -1,9 +1,12 @@
 {
 	"name":             "date-prompt",
 	"description":      "A CLI date picker prompt.",
-	"version":          "0.7.0",
+	"version": "1.0.0",
 	"main":             "index.js",
-	"files":            ["index.js"],
+	"files": [
+		"index.js",
+		"example.js"
+	],
 	"keywords":         ["date", "day", "month", "year",
 	                    "interactive", "prompt", "command line", "cli", "terminal"],
 	"author":           "Jannis R <mail@jannisr.de>",
