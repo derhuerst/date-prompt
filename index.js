@@ -31,6 +31,7 @@ const DatePrompt = {
 		this.done = this.aborted = true
 		this.render()
 		this.out.write('\n')
+		this.value = this.value.toISOString(true)
 		this.close()
 	}
 
@@ -39,6 +40,7 @@ const DatePrompt = {
 		this.aborted = false
 		this.render()
 		this.out.write('\n')
+		this.value = this.value.toISOString(true)
 		this.close()
 	}
 

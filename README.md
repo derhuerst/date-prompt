@@ -22,8 +22,8 @@ npm install date-prompt
 const datePrompt = require('date-prompt')
 
 datePrompt('When is your birthday?')
-.then(val => console.log('Submitted with', val))
-.catch(val => console.log('Aborted with', val))
+.then(isoStr => console.log('Submitted with', isoStr))
+.catch(isoStr => console.log('Aborted with', isoStr))
 ```
 
 
