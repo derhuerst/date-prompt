@@ -24,13 +24,11 @@ const DatePrompt = {
 	  reset: function () {
 	  	this.typed = ''; this.lastHit = 0
 		this.value = this.initialValue
-		this.emit()
 		this.render()
 	}
 
 	, abort: function () {
 		this.done = this.aborted = true
-		this.emit()
 		this.render()
 		this.out.write('\n')
 		this.close()
@@ -39,7 +37,6 @@ const DatePrompt = {
 	, submit: function () {
 		this.done = true
 		this.aborted = false
-		this.emit()
 		this.render()
 		this.out.write('\n')
 		this.close()
@@ -83,13 +80,11 @@ const DatePrompt = {
 	, up: function () {
 		this.typed = ''; this.lastHit = 0
 		this.value.add(1, digits[this.cursor].unit)
-		this.emit()
 		this.render()
 	}
 	, down: function () {
 		this.typed = ''; this.lastHit = 0
 		this.value.subtract(1, digits[this.cursor].unit)
-		this.emit()
 		this.render()
 	}
 
@@ -113,7 +108,6 @@ const DatePrompt = {
 			if (this.cursor < digits.length - 1) this.cursor++
 		}
 
-		this.emit()
 		this.render()
 	}
 
